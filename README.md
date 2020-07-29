@@ -95,6 +95,14 @@ class BoxSides{
     return this;
   }
 
+  operator +(BoxSides other){
+    return this.addSide(other);
+  }
+  
+  operator -(BoxSides other){
+    return this.removeSide(other);
+  }
+  
   @override
   String toString() {
     String str="";
