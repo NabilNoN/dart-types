@@ -76,7 +76,9 @@ class Types{
 
   @override
   bool operator ==(other) {
-    return other is Types && other.id==this.id;
+    return (other is Types && other.id==this.id) ||
+        (other is int && other==this.id) ||
+        (other is String && other==this.name) ;
   }
 
   @override
