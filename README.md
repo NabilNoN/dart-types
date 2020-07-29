@@ -46,6 +46,72 @@ type.toString();//69904_BCDE
 ```
 remember Types.F ACTS as Null or Undefined.
 
+## Define Your Custom Choise
+
+```dart
+//define custom types example
+class BoxSides{
+  TypesBuilder builder;
+  BoxSides._fromTypes(Types type){
+    builder=TypesBuilder.build(type??Types.F);
+  }
+
+  static final BoxSides NoSides=BoxSides._fromTypes(Types.F);
+  static final BoxSides TOP=BoxSides._fromTypes(Types.A);
+  static final BoxSides LEFT=BoxSides._fromTypes(Types.B);
+  static final BoxSides RIGHT=BoxSides._fromTypes(Types.C);
+  static final BoxSides BOTTOM=BoxSides._fromTypes(Types.D);
+
+  static final BoxSides TOP_LEFT=BoxSides._fromTypes(Types.AB);
+  static final BoxSides TOP_RIGHT=BoxSides._fromTypes(Types.AC);
+
+  static final BoxSides LEFT_RIGHT=BoxSides._fromTypes(Types.BC);
+
+  static final BoxSides LEFT_BOTTOM=BoxSides._fromTypes(Types.BD);
+  static final BoxSides RIGHT_BOTTOM=BoxSides._fromTypes(Types.CD);
+
+  static final BoxSides TOP_BOTTOM=BoxSides._fromTypes(Types.AD);
+
+  static final BoxSides TOP_LEFT_RIGHT=BoxSides._fromTypes(Types.ABC);
+  static final BoxSides LEFT_RIGHT_BOTTOM=BoxSides._fromTypes(Types.BCD);
+  static final BoxSides TOP_LEFT_BOTTOM=BoxSides._fromTypes(Types.ABD);
+  static final BoxSides TOP_RIGHT_BOTTOM=BoxSides._fromTypes(Types.ACD);
+
+  static final BoxSides TOP_LEFT_RIGHT_BOTTOM=BoxSides._fromTypes(Types.ABCD);
+
+  bool get isNoSides=>(builder.type & Types.ABCD)==Types.F;
+  bool get hasTOP=>builder.hasA;
+  bool get hasLEFT=>builder.hasB;
+  bool get hasRIGHT=>builder.hasC;
+  bool get hasBOTTOM=>builder.hasD;
+
+  BoxSides addSide(BoxSides side){
+    builder.addType(side.builder.type);
+    return this;
+  }
+
+  BoxSides removeSide(BoxSides side){
+    builder.removeType(side.builder.type);
+    return this;
+  }
+
+  @override
+  String toString() {
+    String str="";
+    if(this.hasTOP)str+="TOP";
+    if(this.hasLEFT)str+=(str.length>0?" | ":"")+"LEFT";
+    if(this.hasRIGHT)str+=(str.length>0?" | ":"")+"RIGHT";
+    if(this.hasBOTTOM)str+=(str.length>0?" | ":"")+"BOTTOM";
+    return "[ $str ]";
+  }
+}
+
+...
+//usage example
+BoxSides sides=BoxSides.LEFT_RIGHT;//[ LEFT | RIGHT ]
+sides.addSide(BoxSides.BOTTOM).addSide(BoxSides.TOP).removeSide(BoxSides.LEFT);//[ TOP | RIGHT | BOTTOM ]
+```
+
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
