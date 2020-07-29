@@ -62,23 +62,6 @@ class BoxSides{
   static final BoxSides RIGHT=BoxSides._fromTypes(Types.C);
   static final BoxSides BOTTOM=BoxSides._fromTypes(Types.D);
 
-  static final BoxSides TOP_LEFT=BoxSides._fromTypes(Types.AB);
-  static final BoxSides TOP_RIGHT=BoxSides._fromTypes(Types.AC);
-
-  static final BoxSides LEFT_RIGHT=BoxSides._fromTypes(Types.BC);
-
-  static final BoxSides LEFT_BOTTOM=BoxSides._fromTypes(Types.BD);
-  static final BoxSides RIGHT_BOTTOM=BoxSides._fromTypes(Types.CD);
-
-  static final BoxSides TOP_BOTTOM=BoxSides._fromTypes(Types.AD);
-
-  static final BoxSides TOP_LEFT_RIGHT=BoxSides._fromTypes(Types.ABC);
-  static final BoxSides LEFT_RIGHT_BOTTOM=BoxSides._fromTypes(Types.BCD);
-  static final BoxSides TOP_LEFT_BOTTOM=BoxSides._fromTypes(Types.ABD);
-  static final BoxSides TOP_RIGHT_BOTTOM=BoxSides._fromTypes(Types.ACD);
-
-  static final BoxSides TOP_LEFT_RIGHT_BOTTOM=BoxSides._fromTypes(Types.ABCD);
-
   bool get isNoSides=>(builder.type & Types.ABCD)==Types.F;
   bool get hasTOP=>builder.hasA;
   bool get hasLEFT=>builder.hasB;
@@ -86,23 +69,21 @@ class BoxSides{
   bool get hasBOTTOM=>builder.hasD;
 
   BoxSides addSide(BoxSides side){
-    builder.addType(side.builder.type);
-    return this;
+    return this + side;
   }
 
   BoxSides removeSide(BoxSides side){
-    builder.removeType(side.builder.type);
-    return this;
+    return this - side;
   }
 
   operator +(BoxSides other){
-    return this.addSide(other);
+    return BoxSides._fromTypes(this.builder.type+other.builder.type);
   }
-  
+
   operator -(BoxSides other){
-    return this.removeSide(other);
+    return BoxSides._fromTypes(this.builder.type-other.builder.type);
   }
-  
+
   @override
   String toString() {
     String str="";
@@ -113,11 +94,65 @@ class BoxSides{
     return "[ $str ]";
   }
 }
+```
 
-...
-//usage example
-BoxSides sides=BoxSides.LEFT_RIGHT;//[ LEFT | RIGHT ]
+```dart
+class Corners{
+  TypesBuilder builder;
+  Corners._fromTypes(Types type){
+    builder=TypesBuilder.build(type??Types.F);
+  }
+
+  static final Corners NoCorners=Corners._fromTypes(Types.F);
+  static final Corners TOP_LEFT=Corners._fromTypes(Types.A);
+  static final Corners TOP_RIGHT=Corners._fromTypes(Types.B);
+  static final Corners BOTTOM_LEFT=Corners._fromTypes(Types.C);
+  static final Corners BOTTOM_RIGHT=Corners._fromTypes(Types.D);
+
+  bool get isNoCorners=>(builder.type & Types.ABCD)==Types.F;
+  bool get hasTOP_LEFT=>builder.hasA;
+  bool get hasTOP_RIGHT=>builder.hasB;
+  bool get hasBOTTOM_LEFT=>builder.hasC;
+  bool get hasBOTTOM_RIGHT=>builder.hasD;
+
+  Corners addCorner(Corners corner){
+    return this + corner;
+  }
+
+  Corners removeCorner(Corners corner){
+    return this - corner;
+  }
+
+  operator +(Corners other){
+    return Corners._fromTypes(this.builder.type+other.builder.type);
+  }
+
+  operator -(Corners other){
+    return Corners._fromTypes(this.builder.type-other.builder.type);
+  }
+
+  @override
+  String toString() {
+    String str="";
+    if(this.hasTOP_LEFT)str+="TOP_LEFT";
+    if(this.hasTOP_RIGHT)str+=(str.length>0?" | ":"")+"TOP_RIGHT";
+    if(this.hasBOTTOM_LEFT)str+=(str.length>0?" | ":"")+"BOTTOM_LEFT";
+    if(this.hasBOTTOM_RIGHT)str+=(str.length>0?" | ":"")+"BOTTOM_RIGHT";
+    return "< $str >";
+  }
+
+}
+```
+
+usage example:
+
+```dart
+BoxSides sides=BoxSides.LEFT + BoxSides.RIGHT;//[ LEFT | RIGHT ]
 sides.addSide(BoxSides.BOTTOM).addSide(BoxSides.TOP).removeSide(BoxSides.LEFT);//[ TOP | RIGHT | BOTTOM ]
+sides=sides - BoxSides.RIGHT;//[ TOP | BOTTOM ]
+
+Corners corner = Corners.TOP_LEFT + Corners.BOTTOM_RIGHT;//< TOP_LEFT | BOTTOM_RIGHT >
+corner+=Corners.BOTTOM_LEFT;//< TOP_LEFT | BOTTOM_LEFT | BOTTOM_RIGHT >
 ```
 
 ## Contributing
