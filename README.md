@@ -46,7 +46,7 @@ type.toString();//69904_BCDE
 ```
 remember Types.F ACTS as Null or Undefined.
 
-## Define Your Custom Choise
+## Define Your Custom Choice
 
 ```dart
 //define custom types example
