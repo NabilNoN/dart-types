@@ -155,6 +155,40 @@ Corners corner = Corners.TOP_LEFT + Corners.BOTTOM_RIGHT;//< TOP_LEFT | BOTTOM_R
 corner+=Corners.BOTTOM_LEFT;//< TOP_LEFT | BOTTOM_LEFT | BOTTOM_RIGHT >
 ```
 
+OR an easy enum
+
+```dart
+class Sizes{
+  TypesBuilder builder;
+  Sizes._fromTypes(Types type){
+    builder=TypesBuilder.build(type??Types.F);
+  }
+
+  static final Sizes SMALL=Sizes._fromTypes(Types.A);
+  static final Sizes MEDIUM=Sizes._fromTypes(Types.B);
+  static final Sizes LARGE=Sizes._fromTypes(Types.C);
+
+  bool get isNull=>(builder.type & Types.ABC)==Types.F;
+  bool get isSmall=>builder.hasA;
+  bool get isMedium=>builder.hasB;
+  bool get isLarge=>builder.hasC;
+
+  @override
+  String toString() {
+    String str="";
+    if(this.isSmall)str+="SMALL";
+    if(this.isMedium)str+=(str.length>0?" , ":"")+"MEDIUM";
+    if(this.isLarge)str+=(str.length>0?" , ":"")+"LARGE";
+    return "< $str | ${super.toString()}>";
+  }
+}
+
+var size = Sizes.LARGE;
+if(size.isLarge){
+  print('is large');//is large
+}
+```
+
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
